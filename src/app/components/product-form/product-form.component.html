@@ -1,0 +1,148 @@
+<form class="row" [formGroup]="productForm" (ngSubmit)="submit()">
+  <div class="form-group col-md-12">
+    <!-- <pre>{{dataProduct|json}}</pre> -->
+    <label for="name">Nombre del producto</label>
+    <input
+      type="text"
+      formControlName="name"
+      id="NameProd"
+      class="form-control form-control-sm"
+    />
+  </div>
+  <div class="form-group col-md-8">
+    <label for="brand">Marca</label>
+    <input
+      type="text"
+      formControlName="brand"
+      id="brand"
+      class="form-control form-control-sm"
+    />
+  </div>
+  <div class="form-group col-md-4">
+    <label for="state">Estado</label>
+    <select
+      name="state"
+      id="state"
+      formControlName="state"
+      class="form-control form-control-sm"
+    >
+      <option value="Disponible">Disponible</option>
+      <option value="No Disponible">No Disponible</option>
+    </select>
+  </div>
+  <div class="form-group col-md-4">
+    <label for="stock">Existencias</label>
+    <input
+      type="text"
+      formControlName="stock"
+      id="stock"
+      class="form-control form-control-sm"
+    />
+  </div>
+  <div class="form-group col-md-4">
+    <label for="priceStore">Costo unidad</label>
+    <input
+      type="text"
+      formControlName="priceStore"
+      id="priceStore"
+      class="form-control form-control-sm"
+    />
+  </div>
+
+  <div class="form-group col-md-4">
+    <label for="unitLength">Producto viene en</label>
+    <select
+      name="unitLength"
+      id="unitLength"
+      formControlName="unitLength"
+      class="form-control form-control-sm"
+    >
+      <option value="Unidades">Unidades</option>
+      <option value="Botellas">Botellas</option>
+      <option value="Librsa">Libras</option>
+      <option value="Fardos">Fardos</option>
+      <option value="Cajas">Cajas</option>
+      <option value="Bolsas">Bolsas</option>
+      <option value="Sacos">Sacos</option>
+      <option value="Quintales">Quintales</option>
+      <option value="Puchitos">Puchitos</option>
+    </select>
+  </div>
+
+  <div class="form-group col-md-12">
+    <form
+      class="row"
+      [formGroup]="stockPrice"
+      (ngSubmit)="submitPrices()"
+    >
+      <div class="col-md-12">
+        <table class="table table-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Detalle</th>
+              <th>Cant. {{productForm.value.unitLength}}</th>
+              <th>Precio venta</th>
+              <th>Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  formControlName="name"
+                />
+              </th>
+              <th>
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  formControlName="no"
+                />
+              </th>
+              <th>
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  formControlName="priceSales"
+                />
+              </th>
+              <th>
+                <button class="btn btn-success btn-sm" type="submit">
+                  <i class="fa fa-check" aria-hidden="true"></i>
+                </button>
+                <button class="btn btn-warning btn-sm" type="button" (click)="cancelPrice()">
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+              </th>
+            </tr>
+            <tr *ngFor="let d of dataStocksPrice; index as i;" [ngClass]="{'bg-light':i == itemUpdate}">
+              <td>{{ d.name }}</td>
+              <td>{{ d.no  }} {{productForm.value.unitLength | slice: 0:3}}.</td>
+              <td>{{ d.priceSales | currency }}</td>
+              <td>
+                <button class="btn btn-primary btn-sm" [disabled]="itemUpdate!=-1" type="button" (click)="updatePrice(d, i)">
+                  <i class="fa fa-edit" aria-hidden="true"></i>
+                </button>
+                <button class="btn btn-danger btn-sm" [disabled]="itemUpdate!=-1" type="button" (click)="deletePrice(i)">
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="dataStocksPrice.length == 0">
+              <td class="text-center" colspan="4">
+                No hay opciones de venta
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+
+  <div class="form-group col-md-12">
+    <button type="submit" class="btn btn-block btn-primary btn-sm">Guardar</button>
+    <button type="button" (click)="regresar()" class="btn btn-block btn-danger btn-sm">Cancelar</button>
+  </div>
+</form>
