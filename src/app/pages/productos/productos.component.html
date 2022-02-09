@@ -1,75 +1,81 @@
 <app-navbar></app-navbar>
 
-<div class="container">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-md-12">
-      <h3 class="text-center mt-5">Productos</h3>
-      <hr />
+    <div class="col-md-12 mt-3">
+      <h5 class="mt-2 title-page text-center">PRODUCTOS PARA LA VENTA</h5>
+    </div>
 
-      <div class="row">
-        <div class="col-md-2">
-          <button class="btn btn-primary btn-block btn-sm mb-3" (click)="openModal('Nuevo Producto')">Nuevo</button>
-        </div>
-        <div class="col-md-10">
-          <input type="text" placeholder="Buscar" class="form-control form-control-sm mb-3" [(ngModel)]="filterQuery">
-        </div>
-        <div class="col-md-12">
-          <table class="table table-sm">
-            <thead>
-              <th>Producto</th>
-              <th>Existencias</th>
-              <th>Opciones</th>
-            </thead>
-            <tbody>
-              <tr *ngFor="let p of products | filter:filterQuery">
-                <td>
-                  <p class="pt-name">{{p.name}}</p>
-                  <p class="pt-brand">{{p.brand}}</p>
-                  <p class="pt-brand">
-                    <span [ngClass]="{'text-success':p.state=='Disponible', 'text-danger':p.state!='Disponible'}">{{p.state}}</span>
-                  </p>
-                  <p class="pt-suma">{{p.priceStore |currency}} * {{p.stock}} =</p>
-                  <p class="pt-suma-t">{{p.priceStore * p.stock | currency}}</p>
-                </td>
-                <td>
-                  {{p.stock}}
-                  {{p.unitLength}}
-
-                  <ul>
-                    <li *ngFor="let d of p.stockPrice">
-                      {{d.no}} {{p.unitLength | slice:0:3}}. = {{d.priceSales | currency}}
-                    </li>
-                  </ul>
-
-                </td>
-                <td>
-                  <button class="btn btn-primary btn-sm"  type="button" (click)="selectProduct(p)" >
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-                  </button>
-                  <button class="btn btn-danger btn-sm" type="button" (click)="deleteProduct(p)" >
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr  *ngIf="(products | filter:filterQuery).length==0" >
-                <td class="text-center" colspan="3">No hay productos</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="col-12">
+      <button class="btn btn-primary btn-block btn-sm mb-3" (click)="openModal('Nuevo Producto')">
+        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+        NUEVO PRODUCTO
+      </button>
+    </div>
+    <div class="col-12">
+      <input type="text" placeholder="Buscar" class="form-control form-control-sm mb-3" [(ngModel)]="filterQuery">
     </div>
   </div>
+
+  <!--   <pre>{{products|json}}</pre> -->
+
+  <!-- LISTA DE VENTAS -->
+  <div class="row" *ngFor="let p of products | filter:filterQuery">
+    <div class="col-12">
+      <hr>
+    </div>
+    <div class="col-2">
+      <i class="fa fa-motorcycle left" style="font-size: 20px;" aria-hidden="true"></i>
+    </div>
+    <div class="col-10">
+      <p class="title-transaction">
+        {{p.name}}
+        <br>
+        <b>{{p.brand}}</b>
+        <br>
+        <span [ngClass]="{'text-success':p.state=='Disponible', 'text-danger':p.state!='Disponible'}">{{p.state}}</span>
+      </p>
+      <ul style="font-size: 12px;">
+        <li *ngFor="let d of p.stockPrice">
+          {{d.no}} {{p.unitLength | slice:0:3}}. = {{d.priceSales | currency}}
+        </li>
+      </ul>
+    </div>
+    <div class="col-12">
+      <p>
+        <button class="btn btn-success btn-sm" type="button" (click)="selectProductForCompra(p)">
+          <i class="fa fa-edit" aria-hidden="true"></i>
+          COMPRAR
+        </button>
+        &nbsp;
+        <button class="btn btn-primary btn-sm" type="button" (click)="selectProduct(p)">
+          <i class="fa fa-edit" aria-hidden="true"></i>
+          EDITAR
+        </button>
+        &nbsp;
+        <!--  <button class="btn btn-danger btn-sm" type="button" (click)="deleteProduct(p)">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+          ELIMINAR
+        </button> -->
+      </p>
+    </div>
+  </div>
+
 </div>
 
-<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="staticBackdropLabel">{{modalTitle}}</h5>
       </div>
       <div class="modal-body">
-        <app-product-form [modoEdicion]="modoEdicion"  [dataProduct]="dataProduct" (btnSiguiente)="btnSiguiente($event)" (btnRegresar)="btnCancelar($event)"></app-product-form>
+        <app-product-form *ngIf="accionPorRealizar!='close'" [accionPorRealizar]="accionPorRealizar"
+          [dataProduct]="dataProduct" (btnSiguiente)="btnSiguiente($event)" (btnRegresar)="btnCancelar($event)">
+        </app-product-form>
       </div>
     </div>
   </div>

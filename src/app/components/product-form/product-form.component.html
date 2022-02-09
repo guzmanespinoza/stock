@@ -1,62 +1,54 @@
 <form class="row" [formGroup]="productForm" (ngSubmit)="submit()">
+
+
+
   <div class="form-group col-md-12">
-    <!-- <pre>{{dataProduct|json}}</pre> -->
-    <label for="name">Nombre del producto</label>
-    <input
-      type="text"
-      formControlName="name"
-      id="NameProd"
-      class="form-control form-control-sm"
-    />
+      <label for="name">Nombre del producto</label>
+      <input type="text" formControlName="name" id="NameProd" class="form-control form-control-sm" />
+   
   </div>
-  <div class="form-group col-md-8">
+
+  <div class="form-group col-md-8" *ngIf="accionPorRealizar!='compra'">
     <label for="brand">Marca</label>
-    <input
-      type="text"
-      formControlName="brand"
-      id="brand"
-      class="form-control form-control-sm"
-    />
+    <input type="text" formControlName="brand" id="brand" class="form-control form-control-sm" />
   </div>
-  <div class="form-group col-md-4">
+  <div class="form-group col-md-4" *ngIf="accionPorRealizar!='compra'">
     <label for="state">Estado</label>
-    <select
-      name="state"
-      id="state"
-      formControlName="state"
-      class="form-control form-control-sm"
-    >
+    <select name="state" id="state" formControlName="state" class="form-control form-control-sm">
       <option value="Disponible">Disponible</option>
       <option value="No Disponible">No Disponible</option>
     </select>
   </div>
   <div class="form-group col-md-4">
-    <label for="stock">Existencias</label>
-    <input
-      type="text"
-      formControlName="stock"
-      id="stock"
-      class="form-control form-control-sm"
-    />
+  
+      <label for="stock">Existencias</label>
+      <input type="text" formControlName="stock" id="stock" class="form-control form-control-sm" />
+   
   </div>
   <div class="form-group col-md-4">
-    <label for="priceStore">Costo unidad</label>
-    <input
-      type="text"
-      formControlName="priceStore"
-      id="priceStore"
-      class="form-control form-control-sm"
-    />
+   
+      <label for="priceStore">Costo unidad</label>
+      <input type="text" formControlName="priceStore" id="priceStore" class="form-control form-control-sm" />
+    
   </div>
 
-  <div class="form-group col-md-4">
+  <div class="col-md-12" *ngIf="accionPorRealizar=='compra'"></div>
+
+  <div class="form-group col-md-6" *ngIf="accionPorRealizar=='compra'">
+    <label for="cantidadNuevaCompra">Cantidad Comprada</label>
+    <input type="number" formControlName="cantidadNuevaCompra" id="cantidadNuevaCompra"
+      class="form-control form-control-sm" />
+  </div>
+  <div class="form-group col-md-6" *ngIf="accionPorRealizar=='compra'">
+    <label for="precioUniNuevaCompra">Costo Unidad Comprada</label>
+    <input type="number" formControlName="precioUniNuevaCompra" id="precioUniNuevaCompra"
+      class="form-control form-control-sm" />
+  </div>
+
+  <div class="form-group col-md-4" *ngIf="accionPorRealizar!='compra'">
     <label for="unitLength">Producto viene en</label>
-    <select
-      name="unitLength"
-      id="unitLength"
-      formControlName="unitLength"
-      class="form-control form-control-sm"
-    >
+    <select name="unitLength" id="unitLength" formControlName="unitLength" class="form-control form-control-sm">
+      <option value="Cientos">Cientos</option>
       <option value="Unidades">Unidades</option>
       <option value="Botellas">Botellas</option>
       <option value="Librsa">Libras</option>
@@ -69,12 +61,8 @@
     </select>
   </div>
 
-  <div class="form-group col-md-12">
-    <form
-      class="row"
-      [formGroup]="stockPrice"
-      (ngSubmit)="submitPrices()"
-    >
+  <div class="form-group col-md-12" *ngIf="accionPorRealizar!='compra'">
+    <form class="row" [formGroup]="stockPrice" (ngSubmit)="submitPrices()">
       <div class="col-md-12">
         <table class="table table-sm table-bordered">
           <thead>
@@ -88,25 +76,13 @@
           <tbody>
             <tr>
               <th>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  formControlName="name"
-                />
+                <input type="text" class="form-control form-control-sm" formControlName="name" />
               </th>
               <th>
-                <input
-                  type="number"
-                  class="form-control form-control-sm"
-                  formControlName="no"
-                />
+                <input type="number" class="form-control form-control-sm" formControlName="no" />
               </th>
               <th>
-                <input
-                  type="number"
-                  class="form-control form-control-sm"
-                  formControlName="priceSales"
-                />
+                <input type="number" class="form-control form-control-sm" formControlName="priceSales" />
               </th>
               <th>
                 <button class="btn btn-success btn-sm" type="submit">
@@ -119,13 +95,15 @@
             </tr>
             <tr *ngFor="let d of dataStocksPrice; index as i;" [ngClass]="{'bg-light':i == itemUpdate}">
               <td>{{ d.name }}</td>
-              <td>{{ d.no  }} {{productForm.value.unitLength | slice: 0:3}}.</td>
+              <td>{{ d.no }} {{productForm.value.unitLength | slice: 0:3}}.</td>
               <td>{{ d.priceSales | currency }}</td>
               <td>
-                <button class="btn btn-primary btn-sm" [disabled]="itemUpdate!=-1" type="button" (click)="updatePrice(d, i)">
+                <button class="btn btn-primary btn-sm" [disabled]="itemUpdate!=-1" type="button"
+                  (click)="updatePrice(d, i)">
                   <i class="fa fa-edit" aria-hidden="true"></i>
                 </button>
-                <button class="btn btn-danger btn-sm" [disabled]="itemUpdate!=-1" type="button" (click)="deletePrice(i)">
+                <button class="btn btn-danger btn-sm" [disabled]="itemUpdate!=-1" type="button"
+                  (click)="deletePrice(i)">
                   <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
               </td>
