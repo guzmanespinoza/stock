@@ -13,11 +13,13 @@ export interface Products {
   codeBar?: string;
   name: string;
   brand: string;
-  stock: number;
+  stock: any;
   stockPrice:StockPrice[];
-  priceStore:number;
+  priceStore:any;
   unitLength:string;
   state:string;
+  cantidadNuevaCompra?:any;
+  precioUniNuevaCompra?:any;
 }
 
 export interface StockPrice {
