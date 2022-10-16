@@ -1,0 +1,419 @@
+<app-navbar></app-navbar>
+
+<div class="container-fluid" *ngIf="pantalla=='listaDeVentasDiarias'">
+    <div class="row mb-3">
+        <div class="col-6">
+            <p class="mt-3">
+                <button class="btn btn-success btn-block btn-sm" (click)="clickEnBotonNuevaVenta()">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    VENDER
+                </button>
+            </p>
+        </div>
+        <div class="col-6">
+            <p class="mt-3">
+                <button class="btn btn-danger btn-block btn-sm" disabled>
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    DEVOLVER
+                </button>
+            </p>
+        </div>
+
+        <div class="col-md-12">
+            <h1 class="text-center">
+                {{total|currency}}
+            </h1>
+            <h5  class="text-center text-secondary"> {{total|currency}} - {{costo|currency}} = <b
+                    class="text-success">{{total-costo|currency}}</b></h5>
+            <h6  class="text-center text-secondary" style="font-size: 12px;">Venta - Costo =
+                Utilidad </h6>
+            <h5 class="mt-2 title-page text-center">Ventas Diarias</h5>
+        </div>
+
+
+    </div>
+
+    <div class="row" *ngIf="listaventas.length>0">
+        <div class="col-md-12 mb-4">
+            <p class="mt-3" *ngIf="clave=='Bancosal.5'">
+                <button class="btn btn-dark btn-block btn-sm" (click)="facturar()">
+                    <i class="fa fa-user-secret" aria-hidden="true"></i>
+                    FACTURAR TODAS LAS VENTAS
+                </button>
+            </p>
+
+            <div class="form-group " *ngIf="clave!='Bancosal.5'">
+                <input type="password" class="form-control form-control-sm" placeholder="Ingrese CLAVE para facturar"
+                    name="clave" [(ngModel)]="clave">
+            </div>
+
+        </div>
+    </div>
+
+    <!-- LISTA DE VENTAS -->
+    <div *ngFor="let d of listaventas" (click)="seleccionarVenta(d)" >
+        <div class="row" [ngClass]="{'row-a':d.id== ventaSeleccionada.id}">
+            <div class="col-12">
+                <p class="date-tran">
+                    <b>{{d.fecha |date:'medium'}}</b>
+                </p>
+            </div>
+            <div class="col-1">
+                <i class="fa fa-edit left" style="font-size: 20px;" aria-hidden="true"></i>
+            </div>
+            <div class="col-8">
+                <p class="title-transaction">
+                    {{d.detalle}}
+                    <br>
+                    <b>{{d.estado}}</b>
+                </p>
+            </div>
+            <div class="col-3">
+                <p>
+                    <b class="text-right">
+                        {{d.total |currency}}
+                    </b>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENSAJE EN CASO NO HAY VENTAS -->
+    <div class="row" *ngIf="listaventas.length==0">
+        <div class="col-12">
+            <p class="text-center">
+                <i class="fa fa-heartbeat " style="font-size: 100px;" aria-hidden="true"></i>
+            </p>
+            <p class="text-center">
+                LO SENTIMOS...
+            </p>
+            <p class="text-center">
+                NO HAY VENTAS REGISTRADAS PARA HOY
+            </p>
+        </div>
+    </div>
+
+
+
+</div>
+
+<div class="container-fluid" *ngIf="pantalla=='nuevaVenta'">
+    <form class="row" (submit)="registrarVenta()">
+
+        <div class="col-md-12 mt-3">
+            <h5 class="mt-2 title-page text-primary text-center">NUEVA VENTA</h5>
+
+        </div>
+
+        <div class="col-sm-12 form-group">
+
+            <p class="lead date-tran text-center">
+                {{venta.fecha | date: 'medium'}}
+            </p>
+            <h2 class="text-center mb-2">{{totalVentaSeleccionada|currency}}</h2>
+            <label for="detalle">Cliente</label>
+            <input type="text" class="form-control form-control-sm" name="detalle" [(ngModel)]="venta.detalle">
+        </div>
+
+        <div class="col-sm-12 form-group">
+            <button class="btn btn-primary btn-block btn-sm" type="button" (click)="pantalla='seleccionarProducto'">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                SELECCIONAR PRODUCTO
+            </button>
+        </div>
+
+        <div class="form-group col-md-12 mt-3">
+
+            <div class="row" *ngFor="let i of venta.itemsVendidos">
+
+                <div class="col-2">
+                    <p class="title-transaction">
+                        <b style="font-size: 18px;">{{i.cantidad}}</b>
+                    </p>
+                </div>
+                <div class="col-5">
+                    <p class="title-transaction">
+                        {{i.nombreProducto}}
+                        <br>
+                        <i> {{i.precioUnitarioProducto |currency}} c/u </i>
+                        <br>
+                        <b>{{i.marcaProducto}}</b>
+                    </p>
+                </div>
+                <div class="col-3">
+                    <p>
+                        <b class="text-right">
+                            {{i.valorDeVenta|currency}}
+                        </b>
+                    </p>
+                </div>
+                <div class="col-2">
+                    <button type="button" class="btn btn-sm btn-danger" (click)="removerCompra(i)">
+                        <i class="fa fa-close" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="col-12">
+                    <hr>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="venta.itemsVendidos.length==0">
+                <div class="col-12">
+                    <p class="text-center">
+                        <i class="fa fa-exclamation-circle " style="font-size: 100px;" aria-hidden="true"></i>
+                    </p>
+                    <p class="text-center">
+                        LO SENTIMOS...
+                    </p>
+                    <p class="text-center">
+                        NO HAY PRODUCTOS SELECCIONADOS
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-12 form-group" *ngIf="venta.itemsVendidos.length>0">
+            <button class="btn btn-success btn-sm btn-block">
+                <i class="fa fa-money left" aria-hidden="true"></i>
+                GRABAR VENTA
+            </button>
+        </div>
+
+        <div class="col-sm-12 form-group">
+            <button type="button" class="btn btn-sm btn-info btn-block" (click)="pantalla='listaDeVentasDiarias'">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                REGRESAR
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<div class="container-fluid" *ngIf="pantalla=='seleccionarProducto'">
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="mt-2 title-page text-primary text-center mt-4">SELECCIONAR PRODUCTO</h5>
+        </div>
+        <div class="col-md-12">
+            <input type="text" placeholder="Buscar" class="form-control form-control-sm mb-1  mt-4" name="filter"
+                [(ngModel)]="filterQuery">
+        </div>
+        <div class="col-sm-12 form-group">
+            <button type="button" class="btn btn-sm btn-info btn-block" (click)="pantalla='nuevaVenta'">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                REGRESAR
+            </button>
+        </div>
+    </div>
+
+    <div class="row" *ngFor="let p of products | filter:filterQuery">
+        <div class="col-12">
+            <hr>
+        </div>
+        <div class="col-1">
+            <i class="fa fa-motorcycle left" style="font-size: 20px;" aria-hidden="true"></i>
+        </div>
+        <div class="col-6">
+            <p class="title-transaction">
+                <b> {{p.name}}</b>
+                <br>
+                {{p.brand}}
+
+            </p>
+            <p class="title-transaction m-0">
+
+            </p>
+        </div>
+        <div class="col-4">
+            <p>
+                <button type="button" class="btn btn-sm btn-primary" (click)="selectProduct(p)">
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                    VENDER
+                </button>
+            </p>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="(products| filter:filterQuery).length==0">
+        <div class="col-12">
+            <p class="text-center">
+                <i class="fa fa-motorcycle " style="font-size: 100px;" aria-hidden="true"></i>
+            </p>
+            <p class="text-center">
+                LO SENTIMOS...
+            </p>
+            <p class="text-center">
+                PRODUCTO <i>"{{filterQuery}}"</i> NO ENCONTRADO
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid" *ngIf="pantalla=='detallePorductoSeleccionadoVenta'">
+    <div class="row">
+        <div class="col-md-12 mb-2 mt-3">
+            <h5 class="mt-2 title-page text-primary text-center">DETALLE DE VENTA DE PRODUCTO</h5>
+        </div>
+
+    </div>
+
+    <form (submit)="agregarItem()" class="row">
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-1">
+                    <i class="fa fa-motorcycle left" style="font-size: 20px;" aria-hidden="true"></i>
+                </div>
+                <div class="col-5">
+                    <p class="title-transaction">
+                        {{dataProduct.name}}
+                        <br>
+                        <b>{{dataProduct.brand}}</b>
+                    </p>
+                    <p class="title-transaction m-0">
+
+                    </p>
+                </div>
+                <div class="col-6">
+                    <h2 class="text-center mb-2">{{(itemPrevendido.cantidad*1)*
+                        (itemPrevendido.precioUnitarioProducto*1)|currency}}</h2>
+                </div>
+
+                <div class="col-12">
+                    <hr>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 form-group">
+            <label for="precioUnitarioProducto">Escala de compra</label>
+            <select name="precioUnitarioProducto" id="precioUnitarioProducto" class="form-control form-control-sm"
+                [(ngModel)]="itemPrevendido.precioUnitarioProducto">
+                <option *ngFor="let d of dataProduct.stockPrice" value="{{d.priceSales}}">{{d.no }} {{d.name}}
+                    ({{d.priceSales
+                    |currency}})</option>
+            </select>
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="cantidad">Cantidad</label>
+            <input type="number" class="form-control form-control-sm" name="cantidad"
+                [(ngModel)]="itemPrevendido.cantidad">
+        </div>
+
+
+        <div class="col-md-12">
+            <div class="form-check mt-3 ">
+                <input type="checkbox" class="form-check-input" id="aplicaDescuento" name="aplicaDescuento"
+                    [(ngModel)]="itemPrevendido.aplicaDescuento">
+                <label class="form-check-label" for="aplicaDescuento">Aplicar descuento</label>
+            </div>
+        </div>
+
+        <div class="col-sm-12 form-group mt-3 mb-4" *ngIf="itemPrevendido.aplicaDescuento==true">
+            <label for="valorDeVenta">Precio con descuento</label>
+            <input type="number" class="form-control form-control-sm" id="valorDeVenta" name="valorDeVenta"
+                [(ngModel)]="itemPrevendido.valorDeVenta">
+        </div>
+
+        <div class="col-md-12 mb-4">
+        </div>
+
+        <div class="col-sm-12 form-group">
+            <button type="submit" class="btn btn-success btn-sm btn-block"
+                *ngIf="itemPrevendido.cantidad<=dataProduct.stock && itemPrevendido.cantidad > 0">
+                <i class="fa fa-tag" aria-hidden="true"></i>
+                AGREGAR VENTA
+            </button>
+        </div>
+        <div class="col-sm-12 form-group">
+            <button type="button" class="btn btn-sm btn-info btn-block" (click)="pantalla='seleccionarProducto'">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                REGRESAR
+            </button>
+        </div>
+
+    </form>
+
+
+
+</div>
+
+<div class="container-fluid" *ngIf="pantalla=='ventaSeleccionada'">
+    <form class="row">
+
+        <div class="col-md-12 mt-3">
+            <h5 class="mt-2 title-page text-primary text-center">VENTA SELECCIONADA</h5>
+
+        </div>
+
+        <div class="col-sm-12 form-group">
+
+            <p class="lead date-tran text-center">
+                {{ventaSeleccionada.fecha | date: 'medium'}}
+            </p>
+            <h2 class="text-center mb-2">{{totalVentaSeleccionadaVendida|currency}}</h2>
+            <label for="detalle">Cliente</label>
+            <input type="text" disabled class="form-control form-control-sm" name="detalle"
+                [(ngModel)]="ventaSeleccionada.detalle">
+        </div>
+
+
+
+        <div class="form-group col-md-12 mt-3">
+
+            <div class="row" *ngFor="let i of ventaSeleccionada.itemsVendidos">
+
+                <div class="col-2">
+                    <p class="title-transaction">
+                        <b style="font-size: 18px;">{{i.cantidad}}</b>
+                    </p>
+                </div>
+                <div class="col-5">
+                    <p class="title-transaction">
+                        {{i.nombreProducto}}
+                        <br>
+                        <i> {{i.precioUnitarioProducto |currency}} c/u </i>
+                        <br>
+                        <b>{{i.marcaProducto}}</b>
+                    </p>
+                </div>
+                <div class="col-3">
+                    <p>
+                        <b class="text-right">
+                            {{i.valorDeVenta|currency}}
+                        </b>
+                    </p>
+                </div>
+                <div class="col-12">
+                    <hr>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="ventaSeleccionada.itemsVendidos.length==0">
+                <div class="col-12">
+                    <p class="text-center">
+                        <i class="fa fa-exclamation-circle " style="font-size: 100px;" aria-hidden="true"></i>
+                    </p>
+                    <p class="text-center">
+                        LO SENTIMOS...
+                    </p>
+                    <p class="text-center">
+                        NO HAY PRODUCTOS SELECCIONADOS
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="col-sm-12 form-group">
+            <button type="button" class="btn btn-sm btn-info btn-block" (click)="pantalla='listaDeVentasDiarias'">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                REGRESAR
+            </button>
+        </div>
+
+    </form>
+</div>

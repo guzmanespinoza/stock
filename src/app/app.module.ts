@@ -25,6 +25,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ProductFormComponent } from './components/product-form/product-form.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
+import { FinanzasComponent } from './pages/finanzas/finanzas.component';
+import { VentasComponent } from './pages/ventas/ventas.component';
+import { VentasDiariasComponent } from './pages/ventas-diarias/ventas-diarias.component';
 
 
 @NgModule({
@@ -37,7 +40,10 @@ import { ProductListComponent } from './components/product-list/product-list.com
     FooterComponent,
     ProductFormComponent,
     ProductListComponent,
-    FilterPipe
+    FilterPipe,
+    FinanzasComponent,
+    VentasComponent,
+    VentasDiariasComponent
   ],
   imports: [
     BrowserModule,
