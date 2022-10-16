@@ -3,17 +3,17 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12 mt-3">
-      <h5 class="mt-2 title-page text-center">Finanzas</h5>
+      <h5 class="mt-2 text-uppercase text-center">Finanzas</h5>
       <h2 class="text-center mb-2">{{total|currency}}</h2>
     </div>
 
     <div class="col-12 mt-2" >
-      <button *ngIf="clave=='Bancosal.5'" class="btn btn-primary btn-block btn-sm mb-3" data-toggle="modal" data-target="#exampleModal">
+      <button *ngIf="clave=='123456'" class="btn btn-primary btn-block btn-sm mb-3" data-toggle="modal" data-target="#exampleModal">
         <i class="fa fa-plus" aria-hidden="true"></i>
         Nuevo Registro
       </button>
 
-      <div class="form-group" *ngIf="clave!='Bancosal.5'">
+      <div class="form-group" *ngIf="clave!='123456'">
         <input type="password" class="form-control form-control-sm" placeholder="Ingrese CLAVE agregar ajuste financiero"
           name="clave" [(ngModel)]="clave">
       </div>
@@ -102,3 +102,5 @@
     </div>
   </div>
 </div>
+
+<app-footer></app-footer>

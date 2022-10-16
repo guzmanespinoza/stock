@@ -40,7 +40,7 @@ export class VentasDiariasComponent implements OnInit {
     total: 0,
     costo: 0,
     itemsVendidos: [],
-    estado: 'pendiente',
+    estado: 'Facturado',
   };
 
   listaventas: Ventas[] = [];
@@ -102,7 +102,7 @@ export class VentasDiariasComponent implements OnInit {
       detalle: 'Consumidor Final',
       fecha: new Date().toString(),
       itemsVendidos: [],
-      estado: 'pendiente',
+      estado: 'Facturado',
       total: 0,
       costo: 0,
     };
@@ -247,7 +247,7 @@ export class VentasDiariasComponent implements OnInit {
   clave: string = '';
 
   facturar() {
-    if (this.clave == 'Bancosal.5') {
+    if (this.clave == '123456') {
       let costo = this.listaventas.reduce(
         (sum, value) =>
           typeof value.costo == 'number' ? sum + value.costo : sum,
