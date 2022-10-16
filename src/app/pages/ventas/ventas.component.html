@@ -1,0 +1,202 @@
+<app-navbar></app-navbar>
+
+<div class="container" *ngIf="pantalla=='listaVentas'">
+
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="mt-3">Venta</h1>
+      <hr />
+    </div>
+
+    <div class="col-md-12">
+      <button class="btn btn-primary btn-block" (click)="nuevaVenta()">Nueva Venta</button>
+    </div>
+
+    <div class="col-md-12">
+      <table class="table table-bordered table-responsive">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of listaventas">
+            <td>{{d.fecha |date}}</td>
+            <td>{{d.detalle}}</td>
+            <td>{{d.estado}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="container" *ngIf="pantalla=='lista'">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="mt-5">Ventas</h1>
+      <hr />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <input type="text" placeholder="Buscar" class="form-control form-control-sm mb-3" name="filter"
+        [(ngModel)]="filterQuery">
+    </div>
+    <div class="col-md-12">
+      <table class="table table-sm table-responsive">
+        <thead>
+          <th>Producto</th>
+          <th>Opciones</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of products | filter:filterQuery">
+            <td>
+              <p class="pt-name">{{p.name}}</p>
+              <p class="pt-brand">{{p.brand}}</p>
+              <p class="pt-brand">
+                <span
+                  [ngClass]="{'text-success':p.state=='Disponible', 'text-danger':p.state!='Disponible'}">{{p.state}}
+                </span>
+
+              </p>
+              <h3>
+                {{p.stock}}
+                {{p.unitLength}}
+              </h3>
+
+            </td>
+            <td>
+              <button class="btn btn-success btn-sm" type="button" (click)="selectProduct(p)">
+                <i class="fa fa-edit" aria-hidden="true"></i>
+                Vender
+              </button>
+
+            </td>
+          </tr>
+          <tr *ngIf="(products | filter:filterQuery).length==0">
+            <td class="text-center" colspan="3">No hay productos</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="pantalla=='vendiendo'">
+
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="mt-3">Vendiendo</h1>
+      <hr />
+    </div>
+  </div>
+
+  <form (submit)="agregarItem()" class="row">
+    <div class="col-sm-12 form-group">
+      <h3>{{dataProduct.name}}</h3>
+      <h5>{{dataProduct.brand}}</h5>
+      <h6>
+        {{dataProduct.stock}}
+        {{dataProduct.unitLength}}
+      </h6>
+    </div>
+    <div class="col-sm-12 form-group">
+      <label for="precioUnitarioProducto">Escala de compra</label>
+      <select name="precioUnitarioProducto" id="precioUnitarioProducto" class="form-control"
+        [(ngModel)]="itemPrevendido.precioUnitarioProducto">
+        <option *ngFor="let d of dataProduct.stockPrice" value="{{d.priceSales}}">{{d.no }} {{d.name}} ({{d.priceSales
+          |currency}})</option>
+      </select>
+    </div>
+    <div class="col-sm-12 form-group">
+      <label for="cantidad">Cantidad</label>
+      <input type="number" class="form-control" name="cantidad" [(ngModel)]="itemPrevendido.cantidad">
+    </div>
+    <div class="col-sm-12 form-group">
+      <label for="aplicaDescuento">Aplicar descuento</label>
+      <input type="checkbox" id="aplicaDescuento" name="aplicaDescuento" [(ngModel)]="itemPrevendido.aplicaDescuento">
+    </div>
+    <div class="col-sm-12 form-group" *ngIf="itemPrevendido.aplicaDescuento==true">
+      <label for="valorDeVenta">Precio con descuento</label>
+      <input type="number" class="form-control" id="valorDeVenta" name="valorDeVenta"
+        [(ngModel)]="itemPrevendido.valorDeVenta">
+    </div>
+
+    <div class="col-sm-12 form-group">
+      <h3>Total: {{(itemPrevendido.cantidad*1)* (itemPrevendido.precioUnitarioProducto*1)|currency}}</h3>
+    </div>
+
+    <div class="col-sm-12 form-group">
+      <button type="submit" class="btn btn-primary btn-block"
+        *ngIf="itemPrevendido.cantidad<=dataProduct.stock && itemPrevendido.cantidad > 0"> Agregar </button>
+    </div>
+    <div class="col-sm-12 form-group">
+      <button type="button" class="btn btn-danger btn-block"> Salir </button>
+    </div>
+
+  </form>
+
+</div>
+
+
+
+
+<div class="container" *ngIf="pantalla=='nuevaVenta'">
+
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="mt-3">Venta</h1>
+      <hr />
+    </div>
+
+
+
+  </div>
+
+  <form class="row" (submit)="registrarVenta()">
+    <div class="col-sm-12 form-group">
+      <p class="lead">
+        {{venta.fecha | date: 'medium'}}
+      </p>
+    </div>
+    <div class="col-sm-12 form-group">
+      <label for="detalle">Cliente</label>
+      <input type="text" class="form-control" name="detalle" [(ngModel)]="venta.detalle">
+    </div>
+
+    <div class="col-sm-12 form-group">
+      <button class="btn btn-primary btn-block" (click)="pantalla='lista'">Agregar producto</button>
+    </div>
+
+    <div class="form-group col-md-12">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Cant</th>
+            <th>Detalle</th>
+            <th>Precio</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of venta.itemsVendidos">
+            <td>{{i.cantidad}}</td>
+            <td>{{i.nombreProducto}}</td>
+            <td>{{i.valorDeVenta}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-sm-12 form-group">
+      <button class="btn btn-primary btn-block">Guardar Venta</button>
+    </div>
+
+  </form>
+
+</div>

@@ -8,17 +8,19 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./product-form.component.scss'],
 })
 export class ProductFormComponent implements OnInit {
+
+  
   @Output() btnSiguiente = new EventEmitter<Products>();
   @Output() btnRegresar = new EventEmitter<any>();
 
-  @Input() modoEdicion!: boolean;
+  @Input() accionPorRealizar!: string;
 
   _dataProductEdit!: Products;
   get dataProduct(): Products {
     return this._dataProductEdit;
   }
   @Input() set dataProduct(dataProductEdit: Products) {
-    if (this.modoEdicion == true) {
+    if (this.accionPorRealizar != 'agregar') {
       this._dataProductEdit = dataProductEdit;
       // this.productForm.get('name').setValue(dataProductEdit?.name);
       this.productForm.controls['name'].setValue(this._dataProductEdit?.name);
@@ -35,6 +37,12 @@ export class ProductFormComponent implements OnInit {
       this.productForm.controls['unitLength'].setValue(
         this._dataProductEdit?.unitLength
       );
+
+       if(this.accionPorRealizar!='compra'){
+        this.productForm.controls['cantidadNuevaCompra'].disable();
+        this.productForm.controls['precioUniNuevaCompra'].disable();
+      } 
+
       this.dataStocksPrice = this._dataProductEdit?.stockPrice;
     }
   }
@@ -55,6 +63,8 @@ export class ProductFormComponent implements OnInit {
     priceStore: new FormControl('', [Validators.required]),
     unitLength: new FormControl('', [Validators.required]),
     state: new FormControl('', [Validators.required]),
+    cantidadNuevaCompra: new FormControl('' ),
+    precioUniNuevaCompra: new FormControl(''),
   });
 
   itemUpdate: number = -1;
@@ -79,6 +89,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   regresar() {
+ 
     this.productForm.reset();
     this.dataStocksPrice = [];
     this.btnRegresar.emit('close');
