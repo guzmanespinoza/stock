@@ -48,16 +48,13 @@
   <div class="form-group col-md-4" *ngIf="accionPorRealizar!='compra'">
     <label for="unitLength">Producto viene en</label>
     <select name="unitLength" id="unitLength" formControlName="unitLength" class="form-control form-control-sm">
-      <option value="Cientos">Cientos</option>
       <option value="Unidades">Unidades</option>
+      <option value="Litros">Litros</option>
+      <option value="Pack">Pack</option>
       <option value="Botellas">Botellas</option>
-      <option value="Librsa">Libras</option>
-      <option value="Fardos">Fardos</option>
       <option value="Cajas">Cajas</option>
       <option value="Bolsas">Bolsas</option>
-      <option value="Sacos">Sacos</option>
-      <option value="Quintales">Quintales</option>
-      <option value="Puchitos">Puchitos</option>
+      <option value="Otro">Otro</option>
     </select>
   </div>
 
@@ -124,3 +121,4 @@
     <button type="button" (click)="regresar()" class="btn btn-block btn-danger btn-sm">Cancelar</button>
   </div>
 </form>
+
